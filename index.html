@@ -149,6 +149,7 @@
             min-height: 200px;
             white-space: pre-wrap;
             line-height: 1.6;
+            font-size: 16px;
         }
         
         .loading {
@@ -178,6 +179,10 @@
         .copy-btn {
             background: #10b981;
             margin-top: 15px;
+        }
+        
+        .copy-btn:hover {
+            background: #0da271;
         }
         
         .stats {
@@ -407,6 +412,13 @@
             if (freeUses <= 0) {
                 document.getElementById('pricingSection').style.display = 'grid';
             }
+            
+            // 设置输入框回车事件
+            document.getElementById('originalText').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && e.ctrlKey) {
+                    convertWithAPI();
+                }
+            });
         };
         
         // ============ 核心功能：调用API转换内容 ============
@@ -497,7 +509,7 @@
                 updateUsageDisplay();
                 
                 // 显示成功消息
-                showMessage(`✅ 转换成功！AI已生成完美文案`, 'success');
+                showMessage(`✅ 转换成功！剩余免费次数：${freeUses}次`, 'success');
                 
                 // 如果次数用完，显示付费墙
                 if (freeUses <= 0) {
@@ -570,8 +582,19 @@
                 </div>`;
             }
             
+            if (suggestions.tips && suggestions.tips.length > 0) {
+                html += `<div style="margin-bottom:15px;">
+                    <strong>💡 拍摄技巧：</strong>
+                    <ul style="margin-top:5px; padding-left:20px;">
+                `;
+                suggestions.tips.forEach(tip => {
+                    html += `<li style="margin-bottom:5px; font-size:14px;">${tip}</li>`;
+                });
+                html += '</ul></div>';
+            }
+            
             html += `<div>
-                <strong>📸 拍摄建议：</strong>
+                <strong>📸 具体建议：</strong>
                 <ul style="margin-top:10px; padding-left:20px;">
             `;
             
@@ -642,7 +665,6 @@
         function testAPIConnection() {
             console.log('测试API连接...');
             
-            // 发送测试请求
             fetch('/api/convert', {
                 method: 'POST',
                 headers: {
@@ -667,9 +689,6 @@
                 showMessage(`❌ API连接失败: ${error.message}`, 'error');
             });
         }
-        
-        // 页面加载后自动测试API连接（可选）
-        // setTimeout(testAPIConnection, 1000);
     </script>
 </body>
 </html>
