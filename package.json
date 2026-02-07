@@ -1,11 +1,7 @@
 {
   "name": "tweet-to-xiaohongshu",
   "version": "1.0.0",
-  "description": "AI推文转小红书工具",
   "scripts": {
     "dev": "vercel dev"
-  },
-  "dependencies": {
-    "@vercel/node": "^2.0.0"
   }
 }
